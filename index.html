@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="img/apple-touch.png">
 <link rel="preload" href="fonts/dm-serif-display-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="img/hero/014.webp" as="image">
-<link rel="stylesheet" href="css/site.css?v=1">
+<link rel="stylesheet" href="css/site.css?v=2">
 </head>
 <body>
 
@@ -48,7 +48,11 @@
   <h1 class="h-nome"><span class="h-n1">Kelly</span><span class="h-n2">Graça</span></h1>
   <div class="h-meio">
     <figure class="quadro" id="quadro">
-      <div class="q-tela" id="qTela"></div>
+      <div class="q-tela" id="qTela" role="img" aria-label="Tatuagens de Kelly Graça">
+        <img class="q-base" src="img/hero/014.webp" alt="" width="1400" height="1750">
+        <canvas class="q-cv" id="tela" aria-hidden="true"></canvas>
+        <video class="q-cv" id="telamp4" muted playsinline loop preload="auto" aria-hidden="true" hidden></video>
+      </div>
       <figcaption class="q-leg"><span id="qNome">Zeus</span></figcaption>
     </figure>
   </div>
@@ -233,7 +237,8 @@
 
 <script src="js/obras.js?v=1"></script>
 <script src="js/hero.js?v=1"></script>
+<script src="js/tinta.js?v=1"></script>
 <script src="js/i18n.js?v=1"></script>
-<script src="js/main.js?v=1"></script>
+<script src="js/main.js?v=3"></script>
 </body>
 </html>

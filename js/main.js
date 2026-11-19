@@ -35,27 +35,43 @@
   gaveta.addEventListener('click', function (e) { if (e.target.closest('a')) gav(false); });
   d.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !gaveta.hidden) gav(false); });
 
-  /* HERO: cada retrato começa no olhar e afasta até a peça inteira, ciclo de 5 s */
-  var tela = d.getElementById('qTela'), qNome = d.getElementById('qNome'), at = -1, camadas = [];
-  HERO.forEach(function (h, i) {
-    var im = d.createElement('img');
-    im.src = 'img/hero/' + h[0] + '.webp'; im.alt = ''; im.width = 1400; im.height = 1750;
-    im.className = 'q-p'; im.style.transformOrigin = (h[1] * 100) + '% ' + (h[2] * 100) + '%';
-    if (i > 0) im.decoding = 'async';
-    tela.appendChild(im); camadas.push(im);
-  });
-  tela.setAttribute('role', 'img'); tela.setAttribute('aria-label', 'Tatuagens de Kelly Graça');
-  function proximo() {
-    if (at >= 0) { var v = camadas[at]; v.classList.remove('on'); v.classList.add('sai'); setTimeout(function () { v.classList.remove('sai'); }, 700); }
-    at = (at + 1) % camadas.length;
-    var n = camadas[at]; void n.offsetWidth; n.classList.add('on');
+  /* HERO: cobertura em tinta do Veríssimo (shader em js/tinta.js); a tinta nasce no olho do retrato seguinte.
+     10 s por peça, a troca dura 6,8 s; no celular, o mesmo em MP4. */
+  var qNome = d.getElementById('qNome'), at = -1;
+  function legenda(i) {
+    if (i === at) return; at = i;
     qNome.style.opacity = 0;
     setTimeout(function () { qNome.textContent = TIT[HERO[at][0]][LI[lang]]; qNome.style.opacity = 1; }, 260);
   }
-  var timer;
-  function liga() { clearInterval(timer); timer = setInterval(proximo, 5000); }
-  setTimeout(function () { proximo(); liga(); }, 250);
-  d.addEventListener('visibilitychange', function () { if (d.hidden) clearInterval(timer); else liga(); });
+  (function () {
+    var cv = d.getElementById('tela'), vd = d.getElementById('telamp4'), P = 10, TR = 6.8, N = HERO.length;
+    /* nome troca quando a tinta já cobriu o rosto */
+    function nomePor(t) { var sl = ((t % (N * P)) + N * P) % (N * P), i = Math.floor(sl / P), si = sl - i * P; legenda(si < 1.6 ? (i + N - 1) % N : i); }
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { legenda(0); return; }
+    if (matchMedia('(max-width: 700px)').matches) {
+      vd.hidden = false; vd.src = 'img/hero/tinta.mp4';
+      vd.addEventListener('playing', function () { vd.classList.add('on'); }, { once: true });
+      vd.addEventListener('timeupdate', function () { nomePor(vd.currentTime + TR); });
+      legenda(0); vd.play().catch(function () {});
+      return;
+    }
+    legenda(0);
+    if (!window.tinta) return;
+    Promise.all(HERO.map(function (h) {
+      return new Promise(function (ok, no) { var im = new Image(); im.onload = function () { ok(im); }; im.onerror = no; im.src = 'img/hero/' + h[0] + '.webp'; });
+    })).then(function (imgs) {
+      var tn = window.tinta(cv, imgs, HERO.map(function (h) { return [h[1], h[2]]; })); if (!tn) return;
+      var ini = performance.now() - TR * 1000, pausa = 0, pt = 0;   /* abre com a 1ª peça inteira */
+      function quadro(now) {
+        if (!d.hidden) { var t = (now - ini - pausa) / 1000; tn.desenha(t); nomePor(t); }
+        requestAnimationFrame(quadro);
+      }
+      d.addEventListener('visibilitychange', function () { if (d.hidden) pt = performance.now(); else if (pt) pausa += performance.now() - pt; });
+      tn.desenha(TR); cv.classList.add('on');
+      requestAnimationFrame(quadro);
+      window.__tinta = tn;
+    }).catch(function () {});
+  })();
 
   /* portfólio */
   var grade = d.getElementById('grade'), mais = d.getElementById('mais'), filtro = 'todos', lim = 24, lista = [];

@@ -65,10 +65,9 @@ button{font:inherit;color:inherit;cursor:pointer}
 .h-meio{grid-area:meio;display:flex;justify-content:center}
 .quadro{--qw:min(31vw,calc((100svh - 330px) * .8),500px);margin:0;width:var(--qw);padding:10px;border:1px solid rgba(180,81,63,.75);background:#0A0B0C;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 1px rgba(236,230,221,.05) inset;animation:sobe .9s var(--ease) both}
 .q-tela{position:relative;aspect-ratio:4/5;overflow:hidden;background:#111}
-.q-p{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1);transition:opacity .5s var(--ease);will-change:transform,opacity}
-.q-p.on{opacity:1;z-index:2;animation:afasta 1.85s linear both}
-.q-p.sai{opacity:0;z-index:1;transition:opacity .65s var(--ease)}
-@keyframes afasta{0%,20%{transform:scale(3.4);animation-timing-function:cubic-bezier(.6,0,.2,1)}100%{transform:scale(1)}}
+.q-base,.q-cv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.q-cv{opacity:0;transition:opacity .6s var(--ease)}
+.q-cv.on{opacity:1}
 .q-leg{display:flex;justify-content:center;padding:12px 0 2px;font:600 13px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--osso2)}
 .q-leg span{transition:opacity .3s var(--ease)}
 .h-pe{grid-area:pe;text-align:center;padding-top:22px;animation:sobe .9s var(--ease) both .25s}
@@ -237,7 +236,6 @@ textarea{resize:vertical}
   .quadro{--qw:min(34vw,calc((100svh - 120px) * .8))}
 }
 @media (prefers-reduced-motion:reduce){
-  .q-p.on{animation:none}
   .rev{opacity:1;transform:none;transition:none}
   html{scroll-behavior:auto}
 }
