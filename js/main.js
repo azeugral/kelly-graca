@@ -36,7 +36,7 @@
   d.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !gaveta.hidden) gav(false); });
 
   /* HERO: cobertura em tinta do Veríssimo (shader em js/tinta.js); a tinta nasce no olho do retrato seguinte.
-     10 s por peça, a troca dura 6,8 s; no celular, o mesmo em MP4. */
+     5 s por peça, a troca dura 2,8 s; no celular, o mesmo em MP4. */
   var qNome = d.getElementById('qNome'), at = -1;
   function legenda(i) {
     if (i === at) return; at = i;
@@ -44,9 +44,9 @@
     setTimeout(function () { qNome.textContent = TIT[HERO[at][0]][LI[lang]]; qNome.style.opacity = 1; }, 260);
   }
   (function () {
-    var cv = d.getElementById('tela'), vd = d.getElementById('telamp4'), P = 10, TR = 6.8, N = HERO.length;
+    var cv = d.getElementById("tela"), vd = d.getElementById("telamp4"), P = 5, TR = 2.8, N = HERO.length;
     /* nome troca quando a tinta já cobriu o rosto */
-    function nomePor(t) { var sl = ((t % (N * P)) + N * P) % (N * P), i = Math.floor(sl / P), si = sl - i * P; legenda(si < 1.6 ? (i + N - 1) % N : i); }
+    function nomePor(t) { var sl = ((t % (N * P)) + N * P) % (N * P), i = Math.floor(sl / P), si = sl - i * P; legenda(si < .7 ? (i + N - 1) % N : i); }
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) { legenda(0); return; }
     if (matchMedia('(max-width: 700px)').matches) {
       vd.hidden = false; vd.src = 'img/hero/tinta.mp4';

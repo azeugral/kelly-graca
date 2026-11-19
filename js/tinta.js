@@ -3,7 +3,7 @@
    1ª onda com borda molhada traz a peça em cinza (aro escuro + brilho de tinta fresca), 2ª onda traz o tom final.
    tinta(canvas, [Image...]) -> {desenha(t)}; tempo periódico: P s por peça, a troca dura TR s. */
 (function () {
-  var P = 10, TR = 6.8;
+  var P = 5, TR = 2.8, K = 6.8 / TR;   /* troca 2,4x mais rápida que a do Veríssimo */
   var RUIDO = 'float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}' +
     'float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}' +
     'float fb(vec2 p){float a=.5,r=0.;for(int k=0;k<5;k++){r+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return r;}';
@@ -64,7 +64,7 @@
         gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, TX[si < TR ? a : b]);
         gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, TX[b]);
         if (cs) gl.uniform2f(U.c0, cs[b][0], cs[b][1]);
-        gl.uniform1f(U.s, si < TR ? si : -1);
+        gl.uniform1f(U.s, si < TR ? si * K : -1);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       }
     };
